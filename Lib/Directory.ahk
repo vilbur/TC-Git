@@ -1,14 +1,22 @@
 ﻿/** Class Directory
 */
-Class Directory
+Class Directory extends Parent
 {
-
-	__New( $path ){
-		this._path	:= $path
-		;MsgBox,262144,, Directory.ahk, 2
+	_name	:= "" ; name of repository
+	/**
+	 */
+	setName()
+	{
+		SplitPath, % this.Parent()._path, $dir
+		this._name	:= $dir
+		return this
 	}
-	
-	
+	/**
+	 */
+	hasGitFolder()
+	{
+		return % InStr( (FileExist this.Parent()._path "\.git") , "X" ) != 0
+	}	
 	
 	
 }

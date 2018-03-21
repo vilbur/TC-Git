@@ -26,9 +26,14 @@ Class Accessors
 	 */
 	MsgBox()
 	{
-		;MsgBox,262144,, XXX,2 
 		return % this.Parent()._MsgBox
 	}
-		
+	/**
+	 */
+	Ini()
+	{
+		;Ini,262144,, XXX,2 
+		return % this.Parent()._Ini
+	}
 }
  

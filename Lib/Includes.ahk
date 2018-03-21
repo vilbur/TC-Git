@@ -4,5 +4,6 @@
 #Include %A_LineFile%\..\Directory.ahk
 #Include %A_LineFile%\..\ReadMe\ReadMe.ahk
 #Include %A_LineFile%\..\MsgBox\MsgBox.ahk
+#Include %A_LineFile%\..\Ini\Ini.ahk
 
 

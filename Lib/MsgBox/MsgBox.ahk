@@ -6,10 +6,12 @@ global $MsgBoxActiveWindowID
 Class MsgBox
 {
 
-	_title	:= ""
+	_params	:= []
+	_title	:= ""	
 	_message	:= ""
 	_timeout	:= ""
-	_button	:= ""		
+	_button	:= ""
+	_options	:= {}	
 	
 	/** Show message box centered to window
 		@params
@@ -20,7 +22,8 @@ Class MsgBox
 	message( $params* )
 	{
 		this._setParams($params)
-		this._centerToWindow()				
+		this._centerToWindow()
+		
 		MsgBox,262144, % this._title , % this._message, % this._timeout
 		return this
 	}
@@ -43,6 +46,34 @@ Class MsgBox
 		IfMsgBox, Yes
 			return true		 
 	}
+	/** Show input box
+		$title
+		$message
+		$options ; { "x":int, "y":int, "w":int, "h"int:, "default":string, "font":string }			
+		$timeout 
+	 */
+	input( $params* )
+	{
+		this._setParams($params)
+		this._centerToWindow()
+		
+		InputBox, $value, % this._title, % this._message,, % this._options.w, % this._options.h, % this._options.x, % this._options.y,, % this._timeout, % this._options.default
+		
+		return %$value% 
+	}
+	/** 
+	 */
+	_setParams( $params )
+	{
+		this._params	:= $params
+		
+		this._setParamsDefaults()
+		
+		this._findParamsTitleAndMessage()
+		this._findParamTimeout()		
+		this._setButtonParam()
+		this._findOptionsObject()				
+	}
 	/**
 	 */
 	_setParamsDefaults()
@@ -50,35 +81,52 @@ Class MsgBox
 		this._title	:= RegExReplace( A_ScriptName, "i)\.(ahk|exe)$", "" ) 
 		this._timeout	:= 0
 		this._button	:= "yes"
+		this._options	:= { "x":"", "y":"", "w":"", "h":128, "default":"" }		
 	}
-	/**
-	 */
-	_setParams( $params )
-	{
-		$length	:= $params.Length()
+	/** Set title and message
 		
-		this._setParamsDefaults()
-		this._setButtonParam($params)		
+		If 1 parameters	then it is title
+		If 2 parameters	then 1st is title, 2nd is message
+	 */
+	_findParamsTitleAndMessage()
+	{
+		$length	:= this._params.Length()
 		
 		if($length==1)
-			this._message := $params[1]
+			this._message := this._params[1]
 		
-		if($length>=2){
-			this._title 	:= $params[1]
-			this._message	:= $params[2]
-		}
-		
-		if $params[$params.Length()] is number
-			this._timeout	:= $params[$params.Length()]
-	}
-	/**
+		if($length>1){
+			this._title 	:= this._isString(this._params[1]) ? this._params[1] : ""
+			this._message	:= this._isString(this._params[2]) ? this._params[2] : ""
+		}	
+	} 
+	/** Find options object
+		It is object in parameters 
 	 */
-	_setButtonParam( $params )
+	_findParamTimeout()
 	{
-		For $i, $param in $params
+		For $i, $param in this._params
+			if $param is integer
+				this._timeout	:= $param
+	} 
+	/** Find options object
+		It is integer in parameters
+	 */
+	_findOptionsObject()
+	{
+		For $i, $param in this._params
+			if( IsObject($param) )
+				this._options	:= $param
+	} 
+	
+	/** set which button is selected
+		parameter is "yes|no"
+	 */
+	_setButtonParam()
+	{
+		For $i, $param in this._params
 			if( RegExMatch( $param, "i)^(yes|no)$", $button ) )
 				this._button := $button
-
 	} 
 	/**
 	 */
@@ -86,6 +134,18 @@ Class MsgBox
 	{
 		WinGet, $MsgBoxActiveWindowID, ID, A
 		OnMessage(0x44, "centerMsgToWinow")
+	}
+	/**
+	 */
+	_isString( $param )
+	{
+		if $param is number
+			return false 			
+		
+		if ( IsObject($param) )
+			return false
+		
+		return true 
 	} 
 	
 	
@@ -95,8 +155,9 @@ Class MsgBox
 */
 centerMsgToWinow($wParam)
 {
+	;MsgBox,262144,wParam, %$wParam%,3 
 	WinGetPos, $X, $Y, $W, $H, ahk_id %$MsgBoxActiveWindowID%
-    if ($wParam = 1027) { ; AHK_DIALOG
+    if ($wParam == 1027 || $wParam == 1031) { ; AHK_DIALOG
         Process, Exist
         DetectHiddenWindows, On
         if WinExist("ahk_class #32770 ahk_pid " . ErrorLevel) {

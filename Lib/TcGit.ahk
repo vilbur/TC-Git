@@ -5,11 +5,11 @@
 Class TcGit extends Accessors
 {
 	_path	:= ""
+	_Ini 	:= new Ini( A_LineFile "\..\TcGit.ini" )	
 	_Repository 	:= new Repository().Parent(this)	
-	_Directory 	:= new Directory()
+	_Directory 	:= new Directory().Parent(this)
 	_ReadMe 	:= new ReadMe().Parent(this)
 	_MsgBox 	:= new MsgBox()
-	_ini	:= A_LineFile "\..\TcGit.ini"
 
 	_username	:= ""	
 	
@@ -31,7 +31,8 @@ Class TcGit extends Accessors
 	__New( $path ){
 		this._path	:= $path
 		this._setUsername()
-		this._Repository.setName().setUrl()
+		this.Directory().setName()
+		this.Repository().setUrl()		
 				
 		;MsgBox,262144,, TcGit, 2
 		;MsgBox,262144,variable, % this._ini,3 
@@ -40,15 +41,27 @@ Class TcGit extends Accessors
 	 */
 	_setUsername()
 	{
-		this._username := this._getIniValue( "username" )
+		this._username := this._Ini.get( "config", "username" )
 	} 
 	/**
 	 */
 	cmd( $cmd, $params:="" )
 	{
-		this._run[$cmd] := $params
+		
+		if( this._commands.hasKey($cmd) )
+			this._run[$cmd] := $params
 		return this
 	}
+	/** 
+	 */
+	init( $repository_url:="" )
+	{
+		;if( $repository_url != "" )
+			;this.Repository().setUrl( $repository_url:="" )
+
+	}
+
+	
 	/**
 	 */
 	create()
@@ -59,17 +72,9 @@ Class TcGit extends Accessors
 	 */
 	run()
 	{
-		;this._Repository.exists()
-		;Dump(this._Repository.exists(), "this._Repository.exists()", 1)
-		Dump(this._joinCommands(), "this._joinCommands()", 1)
-
-		;$cmd	:= "cd " this._path " " this._joinCommands()
-		;$cmd	:= $cd_path " &&git " this._commands[$commands]
-			
-	
+		;Dump(this._joinCommands(), "this._joinCommands()", 1)
+		return % this._runCmd( this._joinCommands() )
 	}
-	
-	
 	/** 
 	 */
 	_joinCommands()
@@ -77,21 +82,16 @@ Class TcGit extends Accessors
 		For $cmd, $params in this._run
 			$run_cmd	.= " &&git " $cmd " " $params
 		return %$run_cmd% 
-	} 
-	/** set ini value
-	 */
-	_setIniValue( $key, $value )
-	{
-		IniWrite, %$value%, % this._ini, config, %$key%
 	}
-	
-	/** set ini value
+	/** run commands
+		@param string $commands
 	 */
-	_getIniValue( $key )
+	_runCmd( $commands )
 	{
-		IniRead, $value, % this._ini, config, %$key%		
-		return % $value != "ERROR" ? $value : "X"
+		$commands := RegExReplace( $commands, "^\s*&&", "" ) 
+		return % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c cd " this._path " &&" $commands ).StdOut.ReadAll()
 	}
+
 	
 	/** set\get parent class
 	 * @return object parent class

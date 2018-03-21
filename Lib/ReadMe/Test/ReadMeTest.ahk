@@ -1,6 +1,6 @@
 ﻿#SingleInstance force
 
-#Include %A_LineFile%\..\..\TcGit.ahk
+#Include %A_LineFile%\..\..\..\TcGit.ahk
 
 $path	= %A_LineFile%\..\
 $TcGit 	:= new TcGit( $path )

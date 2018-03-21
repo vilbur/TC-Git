@@ -1,4 +1,4 @@
-﻿#SingleInstance
+﻿#SingleInstance force
 
 #Include %A_LineFile%\..\Lib\TcGit.ahk
 
