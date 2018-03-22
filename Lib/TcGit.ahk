@@ -9,6 +9,7 @@ Class TcGit extends Accessors
 	_Directory 	:= new Directory().Parent(this)
 	_ReadMe 	:= new ReadMe().Parent(this)
 	_MsgBox 	:= new MsgBox()
+	_TcCommand 	:= new TcCommand()	
 
 	_username	:= ""	
 	
@@ -31,7 +32,6 @@ Class TcGit extends Accessors
 		this._setUsername()
 		this.Directory().path( $path )
 		this.Repository().setUrl()		
-				
 	}
 	/**
 	 */
@@ -43,7 +43,6 @@ Class TcGit extends Accessors
 	 */
 	cmd( $cmd, $params:="" )
 	{
-		
 		if( this._commands.hasKey($cmd) )
 			this._run[$cmd] := $params
 		return this
