@@ -14,5 +14,6 @@ $MsgBox 	:= new MsgBox()
 ;$MsgBox.confirm("Title", "confirm with no", "no")
 
 ;$MsgBox.input("Title", "Input prompt" )
-$MsgBox.input("Title", "Input prompt",  { "x":"", "y":"", "w":"", "h":128, "default":"Default text" }	 )
+;$MsgBox.input("Title", "Input prompt",  { "x":"", "y":"", "w":"", "h":128, "default":"Default text" }	 )
 
+$MsgBox.exit("Exiting script", "Message then ExitApp" )

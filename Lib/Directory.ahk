@@ -17,8 +17,8 @@ Class Directory extends Parent
 	path( $path:="" )
 	{
 		if($path) {
-			this._path := $path
-			this.name($path)			
+			this._path := RegExReplace( RegExReplace( $path, "[\\\/]+$", "" ), "/", "\" ) ; "
+			this.name(this._path)			
 		}
 		
 		return $path ? this : this._path
@@ -45,3 +45,4 @@ Class Directory extends Parent
 	
 	
 }
+

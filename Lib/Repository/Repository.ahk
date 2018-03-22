@@ -5,7 +5,20 @@ Class Repository extends Parent
 	static _git_url	:= "https://github.com/" 
 	_url	:= "" ; url to repository
 	_name	:= "" ; name of repository
-
+	
+	/**
+	 */
+	setName()
+	{
+		this._name	:= RegExReplace( this._url, ".*/([^/]+)$", "$1" )  
+		return this
+	}
+	/** 
+	 */
+	getOrigin()
+	{
+		return % RegExMatch( this._runCmd( "git config --get remote.origin.url" ), "i)^https.*\.git" )
+	}	
 	/** set url to repository
 		try to find repository, if $repository_url not defined or url not exist
 	 */
@@ -22,20 +35,7 @@ Class Repository extends Parent
 		
 		this.setName()
 		return this
-	}
-	/**
-	 */
-	setName()
-	{
-		this._name	:= RegExReplace( this._url, ".*/([^/]+)$", "$1" )  
-		return this
-	}
-	/** 
-	 */
-	getOrigin()
-	{
-		return % RegExMatch( this._runCmd( "git config --get remote.origin.url" ), "i)^https.*\.git" )
-	}		
+	}	
 	/** Try set url combining username, folder name
 	 */
 	_findUrl()
@@ -45,11 +45,42 @@ Class Repository extends Parent
 		if( ! this.exists($url) )
 			$url := this._getUrlByPrefixes( $url )
 		
-		if( ! $url )
-			$url := this.MsgBox().input("Git repository", "Set url to repository" )			
-
-			return %$url%		
+		$url := this._confirmUrl( $url )
+		;Dump($url, "url", 1)
+		return %$url%		
 	}
+	/**
+	 */
+	_confirmUrl( $url )
+	{
+		$url := this.MsgBox().input("Git repository", "Is this url correct ?", {default:$url} )
+		
+		this._exitIfCanceled( $url )
+			
+		if ( ! this.exists($url) )
+			return % this._askForUrl( $url )
+
+		return %$url%		
+	}
+	/**
+	 */
+	_askForUrl( $url )
+	{
+		While, ! this.exists($url) {
+			$url := this.MsgBox().input("Git repository", "Set url to repository", {default:$url} )
+			this._exitIfCanceled( $url )		
+		}
+		return %$url%		
+	
+	}
+	/**
+	 */
+	_exitIfCanceled( $url )
+	{
+		if($url==0)
+			exitApp
+	} 
+	
 	/** Try find url combining username, prefix from ini and folder name
 	 */
 	_getUrlByPrefixes( $url )

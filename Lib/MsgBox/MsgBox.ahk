@@ -12,7 +12,8 @@ Class MsgBox
 	_timeout	:= ""
 	_button	:= ""
 	_options	:= {}	
-	
+	_defaults	:= { "x":"", "y":"", "w":"", "h":128, "default":"" }		
+
 	/** Show message box centered to window
 		@params
 			$title
@@ -50,7 +51,9 @@ Class MsgBox
 		$title
 		$message
 		$options ; { "x":int, "y":int, "w":int, "h"int:, "default":string, "font":string }			
-		$timeout 
+		$timeout
+		
+		@return string value || false if canceled
 	 */
 	input( $params* )
 	{
@@ -59,7 +62,17 @@ Class MsgBox
 		
 		InputBox, $value, % this._title, % this._message,, % this._options.w, % this._options.h, % this._options.x, % this._options.y,, % this._timeout, % this._options.default
 		
-		return %$value% 
+		if ErrorLevel
+			return false
+		else
+			return %$value%				
+	}
+	/** message before script exit
+	 */
+	exit( $params* )
+	{
+		this.message($params*)
+		ExitApp
 	}
 	/** 
 	 */
@@ -81,7 +94,7 @@ Class MsgBox
 		this._title	:= RegExReplace( A_ScriptName, "i)\.(ahk|exe)$", "" ) 
 		this._timeout	:= 0
 		this._button	:= "yes"
-		this._options	:= { "x":"", "y":"", "w":"", "h":128, "default":"" }		
+		this._options	:= this._defaults
 	}
 	/** Set title and message
 		
@@ -117,6 +130,18 @@ Class MsgBox
 		For $i, $param in this._params
 			if( IsObject($param) )
 				this._options	:= $param
+		
+		this._setOptionsDefaults()	 	
+		
+	}
+	/**
+	 */
+	_setOptionsDefaults()
+	{
+		For $option, $value in this._defaults
+			if( ! this._options[$option] )
+				this._options[$option] := this._defaults[$option]
+			 
 	} 
 	
 	/** set which button is selected

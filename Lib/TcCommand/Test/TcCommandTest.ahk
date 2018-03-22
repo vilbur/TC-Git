@@ -7,18 +7,32 @@
 */
 $CommandCreate 	:= new TcCommand()
 
-$CommandCreate
-	.name("TcCommand-test")
-	.cmd("c:\GoogleDrive\TotalComander\TcCommand-test")
-	.param("""%P""")
-	.tooltip("Test menu text")
-	.icon("wcmicons.dll,43")
-	.create()
-	.shortcut( "ctr", "shift", "alt", "win", "f12" )
-	.create("force")		
+;$CommandCreate
+;	.name("TcCommand-test")
+;	.cmd("c:\GoogleDrive\TotalComander\TcCommand-test")
+;	.param("Foo param")
+;	.menu("Menu text")
+;	.tooltip("If not defined, menu text is used")	
+;	.icon("wcmicons.dll,43")
+;	.create()
+;	.shortcut( "ctr", "shift", "alt", "win", "f12" )
+;	.create("force")		
 
-/* Delete command
+new TcCommand()
+	.name("TcCommand-escaped-path")
+	.cmd("c:\GoogleDrive\TotalComander\TcCommand-test")
+	.param("%P", "%T")
+	.menu("Escape and add trailing slash to %P and %T params")
+	.tooltip("Problems with quoting of path appear otherwise")	
+	.create()
+
+
+
+/* Delete command and shortcut
   
 */
-new TcCommand().name("TcCommand-test").delete()
+;$CommandDelete := new TcCommand()
+
+;$CommandDelete.name("TcCommand-test").delete()
+		;.shortcut().delete()
 	

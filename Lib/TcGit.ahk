@@ -9,7 +9,7 @@ Class TcGit extends Accessors
 	_Directory 	:= new Directory().Parent(this)
 	_ReadMe 	:= new ReadMe().Parent(this)
 	_MsgBox 	:= new MsgBox()
-	_TcCommand 	:= new TcCommand()	
+	;_TcCommand 	:= new TcCommand()	
 
 	_username	:= ""	
 	
@@ -31,7 +31,9 @@ Class TcGit extends Accessors
 	__New( $path ){
 		this._setUsername()
 		this.Directory().path( $path )
-		this.Repository().setUrl()		
+		this.Repository().setUrl()
+		;Dump(this, "this.", 1)
+
 	}
 	/**
 	 */
@@ -44,16 +46,22 @@ Class TcGit extends Accessors
 	cmd( $cmd, $params:="" )
 	{
 		if( this._commands.hasKey($cmd) )
-			this._run[$cmd] := $params
+			this._run.push({ "cmd": this._commands[$cmd], "params": $params })
+		else
+			this.MsgBox().exit( "TcGit - ERROR", "COMMAND """ $cmd """ DOES NOT EXISTS.`n`nTcGit will exit." )
+			
 		return this
 	}
 	/** 
 	 */
-	init( $repository_url:="" )
+	init()
 	{
-		;if( $repository_url != "" )
-			;this.Repository().setUrl( $repository_url:="" )
-
+		$result := this.cmd("init").cmd("ignorecase").run()
+		;Dump($result, "result", 1)
+		if( RegExMatch( $result, "^Initialized empty Git repository" ) )
+			this.MsgBox().message($result)
+		else
+			this.MsgBox().exit( "Error occurred`n" $result)
 	}
 	/**
 	 */
@@ -72,8 +80,8 @@ Class TcGit extends Accessors
 	 */
 	_joinCommands()
 	{
-		For $cmd, $params in this._run
-			$run_cmd	.= " &&git " $cmd " " $params
+		For $i, $cmd_obj in this._run
+			$run_cmd	.= " &&git " $cmd_obj.cmd " " $cmd_obj.params
 		return %$run_cmd% 
 	}
 	/** run commands
@@ -81,8 +89,11 @@ Class TcGit extends Accessors
 	 */
 	_runCmd( $commands )
 	{
-		$commands := RegExReplace( $commands, "^\s*&&", "" ) 
-		return % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c cd " this.Directory().path() " &&" $commands ).StdOut.ReadAll()
+		$cd_repository	:= "cd " this.Directory().path() 
+		this._run	:= []
+
+		return % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c " $cd_repository $commands ).StdOut.ReadAll()
+		
 	}
 
 	

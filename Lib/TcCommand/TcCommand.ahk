@@ -7,8 +7,9 @@ Class TCcommand
 	_name	:= ""
 	_cmd	:= ""	
 	_param	:= ""
-	_button	:= ""
-	_icon	:= ""			
+	_menu	:= ""	
+	_tooltip	:= ""	
+	_button	:= "%systemroot%\system32\shell32.dll,43"			
 	
 	/** _setTabsPath
 	 */
@@ -23,8 +24,8 @@ Class TCcommand
 	 */
 	name( $name )
 	{
-		this._name 	:= $name
-		this._shortcut	:= new TcShortcut().name($name)
+		this._name 	:= "em_" $name
+		this._shortcut	:= new TcShortcut().name(this._name)
 		return this 		
 	}
 	/**
@@ -37,34 +38,46 @@ Class TCcommand
 	}
 	/**
 	 */
-	param( $params:="" )
+	param( $params* )
 	{
-		this._param := $params
-		return this 		
+		For $i, $param in $params
+			this._param .= this._escapeParameter($param) " "			
+			;this._param .= $param " "
+	
+		return this
 	}
+	/**
+	 */
+	menu( $menu_title )
+	{
+		this._menu := $menu_title
+		return this 		
+	}	
 	/**
 	 */
 	tooltip( $tooltip )
 	{
-		this._button := $tooltip
+		this._tooltip := $tooltip
 		return this 		
 	}
 	/**
 	 */
 	icon( $icon )
 	{
-		this._icon := $icon
+		this._button := $icon
 		return this 		
 	}
-	
 	/**
 	 */
 	create()
 	{
+		this._setDefaultTooltip()
+		
+		this._writeToIni( "menu" )		
 		this._writeToIni( "cmd" )
 		this._writeToIni( "param" )
+		this._writeToIni( "tooltip" )		
 		this._writeToIni( "button" )
-		this._writeToIni( "icon" )
 		
 		return this
 	}
@@ -74,6 +87,7 @@ Class TCcommand
 	{
 		if( this._name )
 			IniDelete, % this._usercmd_ini, % this._name
+		return this
 	}
 	/**
 	 */
@@ -84,6 +98,25 @@ Class TCcommand
 		
 		return this._shortcut
 	}
+	
+	
+	
+	/** escape and quote %T & %P parameter
+	 */
+	_escapeParameter( $param )
+	{
+		if( RegExMatch( $param, "i)^%[TP]$" )  )
+			return % """" $param "\""" ;;;;;; "
+		
+		return %$param%
+	} 
+	/**
+	 */
+	_setDefaultTooltip()
+	{
+		if( ! this._tooltip )
+			this._tooltip := this._menu
+	} 
 	/**
 	 */
 	_writeToIni( $key )

@@ -2,7 +2,7 @@
 #Include %A_LineFile%\..\..\Lib\TcGit.ahk
 
 $path	:= "c:\GoogleDrive\TotalComander\TC-tools\TC-tool-laravel"
-$path	:= "c:\GoogleDrive\TotalComander\TC-tools\laravel"
+;$path	:= "c:\GoogleDrive\TotalComander\TC-tools\laravel"
 ;$path	:= "c:\GoogleDrive\TotalComander\TC-tools\TC-Git"
 
 $TcGit 	:= new TcGit( $path )

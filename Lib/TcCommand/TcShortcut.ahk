@@ -52,7 +52,19 @@ Class TcShortcut
 		else
 			MsgBox,262144,, % "SHORTCUT ALREADY EXISTS`n`n" $shortcut
 	}
-		/**
+	/** Delete shorcut
+		Find command name in section and delete it
+	 */
+	delete()
+	{
+		For $s, $section in ["Shortcuts","ShortcutsWin"]
+			IniRead, $sections, % this._wincmd_ini, %$section%
+				loop, Parse, $sections, `n
+					if( RegExMatch( A_LoopField, "i)^([^\=]+)\=" this._name, $key_match ) )
+						IniDelete,  % this._wincmd_ini, %$section%, %$key_match1% 
+	}
+
+	/**
 	 */
 	_getShortcut()
 	{
