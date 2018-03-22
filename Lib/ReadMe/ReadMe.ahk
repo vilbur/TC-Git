@@ -7,7 +7,7 @@ Class ReadMe extends Parent
 	create($suffix:="")
 	{
 		$filename	= readme%$suffix%.md
-		$dir	:= this.Parent()._path
+		$dir	:= this.Directory().path()
 		$file_path	= %$dir%%$filename%
 		$message	:= FileExist( $file_path ) ? "FILE EXISTS:`n`n" $filename "`n`n OVERRITDE ?" : "CREATE ?`n`n" $filename
 

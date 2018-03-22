@@ -3,17 +3,8 @@
 Class Repository extends Parent
 {
 	static _git_url	:= "https://github.com/" 
+	_url	:= "" ; url to repository
 	_name	:= "" ; name of repository
-
-	_url	:= ""
-	/**
-	 */
-	setName()
-	{
-		;SplitPath, % this.Parent()._path, $dir
-		;this._name	:= $dir
-		;return this
-	}
 
 	/** set url to repository
 		try to find repository, if $repository_url not defined or url not exist
@@ -29,6 +20,14 @@ Class Repository extends Parent
 		else if( ! this.exists( $repository_url) )
 			this._url := this._findUrl()
 		
+		this.setName()
+		return this
+	}
+	/**
+	 */
+	setName()
+	{
+		this._name	:= RegExReplace( this._url, ".*/([^/]+)$", "$1" )  
 		return this
 	}
 	/** 
@@ -41,7 +40,7 @@ Class Repository extends Parent
 	 */
 	_findUrl()
 	{
-		$url	:= this._git_url this.Parent()._username "/" this.Directory()._name
+		$url	:= this._git_url this.Parent()._username "/" this.Directory().name()
 
 		if( ! this.exists($url) )
 			$url := this._getUrlByPrefixes( $url )
@@ -56,9 +55,10 @@ Class Repository extends Parent
 	_getUrlByPrefixes( $url )
 	{
 		$prefixes	:= this.Ini().getKeys("prefixes")
-		
-		For $prefix, $i in $prefixes {
-			$url	:= this._git_url this.Parent()._username "/" $prefix this._name
+		;Dump($prefixes, "prefixes", 1)
+		For $i, $prefix in $prefixes {
+			$url	:= this._git_url this.Parent()._username "/" $prefix this.Directory().name()
+			;Dump($url, "url", 1)
 			if( this.exists( $url ) )
 				return %$url% 
 		}

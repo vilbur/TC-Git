@@ -2,21 +2,46 @@
 */
 Class Directory extends Parent
 {
-	_name	:= "" ; name of repository
+	_path	:= "" ; path to current dir
+	_name	:= "" ; name of dir
+	
+	__New( $path )
+	{
+		this._path	:= $path
+		
+		;MsgBox,262144,, TcGit, 2
+		;MsgBox,262144,variable, % this._ini,3 
+	}
 	/**
 	 */
-	setName()
+	path( $path:="" )
 	{
-		SplitPath, % this.Parent()._path, $dir
-		this._name	:= $dir
-		return this
+		if($path) {
+			this._path := $path
+			this.name($path)			
+		}
+		
+		return $path ? this : this._path
 	}
+	/**
+	 */
+	name( $path:="" )
+	{
+		if( $path ){
+			SplitPath, % $path, $dir
+			this._name := $dir
+		}
+		
+		return $name ? this : this._name
+	} 
+
 	/**
 	 */
 	hasGitFolder()
 	{
-		return % InStr( (FileExist this.Parent()._path "\.git") , "X" ) != 0
+		return % InStr( (FileExist this.name() "\.git") , "X" ) != 0
 	}	
+
 	
 	
 }

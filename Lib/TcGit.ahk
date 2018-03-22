@@ -4,7 +4,6 @@
 */
 Class TcGit extends Accessors
 {
-	_path	:= ""
 	_Ini 	:= new Ini( A_LineFile "\..\TcGit.ini" )	
 	_Repository 	:= new Repository().Parent(this)	
 	_Directory 	:= new Directory().Parent(this)
@@ -29,13 +28,10 @@ Class TcGit extends Accessors
 	_run	:= [] ; commands to run
 
 	__New( $path ){
-		this._path	:= $path
 		this._setUsername()
-		this.Directory().setName()
+		this.Directory().path( $path )
 		this.Repository().setUrl()		
 				
-		;MsgBox,262144,, TcGit, 2
-		;MsgBox,262144,variable, % this._ini,3 
 	}
 	/**
 	 */
@@ -60,8 +56,6 @@ Class TcGit extends Accessors
 			;this.Repository().setUrl( $repository_url:="" )
 
 	}
-
-	
 	/**
 	 */
 	create()
@@ -89,7 +83,7 @@ Class TcGit extends Accessors
 	_runCmd( $commands )
 	{
 		$commands := RegExReplace( $commands, "^\s*&&", "" ) 
-		return % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c cd " this._path " &&" $commands ).StdOut.ReadAll()
+		return % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c cd " this.Directory().path() " &&" $commands ).StdOut.ReadAll()
 	}
 
 	
