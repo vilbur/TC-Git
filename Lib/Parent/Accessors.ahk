@@ -19,8 +19,13 @@ Class Accessors
 	 */
 	ReadMe()
 	{
-		;MsgBox,262144,, ReadMe,2 
 		return % this.Parent()._ReadMe
+	}
+	/**
+	 */
+	GitIgnore()
+	{
+		return % this.Parent()._GitIgnore
 	}
 	/**
 	 */
@@ -32,7 +37,6 @@ Class Accessors
 	 */
 	Ini()
 	{
-		;Ini,262144,, XXX,2 
 		return % this.Parent()._Ini
 	}
 }

@@ -12,7 +12,8 @@ Class INI {
 	/*
 		@param string $file_path path to ini file, DEFAULT: A_ScriptDir\scriptName.ini
 	*/
-	__New($file_path:=""){
+	__New($file_path:="")
+	{
 		this.file($file_path)
 	}
 	

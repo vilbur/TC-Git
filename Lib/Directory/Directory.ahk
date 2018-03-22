@@ -5,25 +5,20 @@ Class Directory extends Parent
 	_path	:= A_WorkingDir 
 	_name	:= "" ; name of dir
 	
-	__New( )
+	__New()
 	{
 		this.name(this._path)
-		;this._path	:= A_ScriptDir
-		
-		;MsgBox,262144,, TcGit, 2
-		;MsgBox,262144,variable, % this._ini,3 
 	}
 	/**
 	 */
-	path()
+	path( $path:="" )
 	{
-		;if($path) {
-		;	this._path := RegExReplace( RegExReplace( $path, "[\\\/]+$", "" ), "/", "\" ) ; "
-		;	this.name(this._path)			
-		;}
+		if($path) {
+			this._path := RegExReplace( RegExReplace( $path, "[\\\/]+$", "" ), "/", "\" ) ; "
+			this.name(this._path)			
+		}
 		
-		;return $path ? this : this._path
-		return this._path		
+		return $path ? this : this._path
 	}
 	/**
 	 */
@@ -35,7 +30,22 @@ Class Directory extends Parent
 		}
 		return $name ? this : this._name
 	} 
+	/** create new dir with readme.me and ignore file
+	  
+	 */
+	create()
+	{
+		$dir_name := this.MsgBox().input( "CREATE DIR", "New directory name" )
+		if( ! $dir_name )
+			ExitApp
+		
+		this.path( this.path() "\\" $dir_name ) 	
+		
+		FileCreateDir, % this.path()
 
+		this.ReadMe().create()
+		this.GitIgnore().create()
+	}
 	/**
 	 */
 	hasGitFolder()

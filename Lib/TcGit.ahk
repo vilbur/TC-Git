@@ -8,7 +8,8 @@ Class TcGit extends Accessors
 	_Ini 	:= new Ini()		
 	_Repository 	:= new Repository().Parent(this)	
 	_Directory 	:= new Directory().Parent(this)
-	_ReadMe 	:= new ReadMe().Parent(this)
+	_GitIgnore 	:= new GitIgnore().Parent(this)
+	_ReadMe 	:= new ReadMe().Parent(this)	
 	_MsgBox 	:= new MsgBox()
 
 	_username	:= ""	
@@ -27,7 +28,12 @@ Class TcGit extends Accessors
 		,"":	""}
 	
 	_run	:= [] ; commands to run
-
+	
+	__New()
+	{
+		;Dump(this, "this.", 1)
+	}
+	
 	_initUrl(){
 		this._setUsername()
 		this.Repository().setUrl()
@@ -72,12 +78,7 @@ Class TcGit extends Accessors
 		else
 			this.MsgBox().exit( "Error occurred`n" $result)
 	}
-	/**
-	 */
-	create()
-	{
-		
-	}
+
 	/**
 	 */
 	run()

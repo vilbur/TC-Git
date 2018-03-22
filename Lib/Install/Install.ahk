@@ -30,6 +30,8 @@ Class Install
 	{
 		this._Ini.set( "config", "username", A_UserName )
 		this._Ini.set( "prefixes" )
+		this._Ini.set( "gitignore-defaults", "*.bak" )
+		this._Ini.set( "gitignore-defaults", ".komodotools" )				
 	}
 	
 	/**
@@ -37,7 +39,8 @@ Class Install
 	_commands()
 	{
 		this._cmdInitFolder()
-		this._cmdReadme()		
+		this._cmdCreateDir()
+		this._cmdReadme()				
 	}
 	/**
 	 */
@@ -49,7 +52,19 @@ Class Install
 			.menu("Init current folder")
 			.tooltip("TcGit - Init current folder")			
 			.create()
+	}
+	/**
+	 */
+	_cmdCreateDir()
+	{
+		this._TcCommand.clone()
+			.name( this._cmd_prefix "create-dir")
+			.param("create-dir")
+			.menu("Crate directory")
+			.tooltip("TcGit - Crate directory in current folder")
+			.create()
 	} 
+
 	/**
 	 */
 	_cmdReadme()
@@ -57,8 +72,8 @@ Class Install
 		this._TcCommand.clone()
 			.name( this._cmd_prefix "create-readme")
 			.param("readme", "-source")
-			.menu("Crate readme	( Ctrl to suffix ""-source"" )")
-			.tooltip("TcGit - Crate readme in current folder")
+			.menu("Crate readme.md	( Ctrl to suffix ""-source"" )")
+			.tooltip("TcGit - Crate readme.md in current folder")
 			.create()
 	} 
 
