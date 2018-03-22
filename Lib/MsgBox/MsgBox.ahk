@@ -26,6 +26,7 @@ Class MsgBox
 		this._centerToWindow()
 		
 		MsgBox,262144, % this._title , % this._message, % this._timeout
+		
 		return this
 	}
 	/** Show confirm box centered to window

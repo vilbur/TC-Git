@@ -8,8 +8,11 @@ Class Repository extends Parent
 	
 	/**
 	 */
-	setName()
+	name( $url:="" )
 	{
+		if( ! $url )
+			return this._name
+		
 		this._name	:= RegExReplace( this._url, ".*/([^/]+)$", "$1" )  
 		return this
 	}
@@ -33,7 +36,7 @@ Class Repository extends Parent
 		else if( ! this.exists( $repository_url) )
 			this._url := this._findUrl()
 		
-		this.setName()
+		this.name( this._url )
 		return this
 	}	
 	/** Try set url combining username, folder name
@@ -45,8 +48,8 @@ Class Repository extends Parent
 		if( ! this.exists($url) )
 			$url := this._getUrlByPrefixes( $url )
 		
-		$url := this._confirmUrl( $url )
-		;Dump($url, "url", 1)
+		$url := $url ? this._confirmUrl( $url ) : this._askForUrl()
+		
 		return %$url%		
 	}
 	/**
@@ -64,7 +67,7 @@ Class Repository extends Parent
 	}
 	/**
 	 */
-	_askForUrl( $url )
+	_askForUrl( $url:="" )
 	{
 		While, ! this.exists($url) {
 			$url := this.MsgBox().input("Git repository", "Set url to repository", {default:$url} )

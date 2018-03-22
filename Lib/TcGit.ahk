@@ -4,12 +4,12 @@
 */
 Class TcGit extends Accessors
 {
-	_Ini 	:= new Ini( A_LineFile "\..\TcGit.ini" )	
+	;_Ini 	:= new Ini( A_ScriptDir "\TcGit.ini" )
+	_Ini 	:= new Ini()		
 	_Repository 	:= new Repository().Parent(this)	
 	_Directory 	:= new Directory().Parent(this)
 	_ReadMe 	:= new ReadMe().Parent(this)
 	_MsgBox 	:= new MsgBox()
-	;_TcCommand 	:= new TcCommand()	
 
 	_username	:= ""	
 	
@@ -28,12 +28,20 @@ Class TcGit extends Accessors
 	
 	_run	:= [] ; commands to run
 
-	__New( $path ){
+	_initUrl(){
 		this._setUsername()
-		this.Directory().path( $path )
 		this.Repository().setUrl()
-		;Dump(this, "this.", 1)
-
+		this._savePrefix()
+	}
+	
+	/**
+	 */
+	_savePrefix()
+	{
+		$repository_name	:= this.Repository().name()
+		$directory_name	:= this.Directory().name()
+		if ( $repository_name != $directory_name && RegExMatch( $repository_name, "i)" $directory_name ) )
+			this._Ini.set( "prefixes", RegExReplace( $repository_name, "i)(.*-)" $directory_name, "$1" )   )
 	}
 	/**
 	 */
@@ -56,6 +64,7 @@ Class TcGit extends Accessors
 	 */
 	init()
 	{
+		this._initUrl()
 		$result := this.cmd("init").cmd("ignorecase").run()
 		;Dump($result, "result", 1)
 		if( RegExMatch( $result, "^Initialized empty Git repository" ) )

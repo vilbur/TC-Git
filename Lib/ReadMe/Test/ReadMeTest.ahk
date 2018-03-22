@@ -2,8 +2,8 @@
 
 #Include %A_LineFile%\..\..\..\TcGit.ahk
 
-$path	= %A_LineFile%\..\
-$TcGit 	:= new TcGit( $path )
+
+$TcGit 	:= new TcGit()
 
 
 /*  In current dir create

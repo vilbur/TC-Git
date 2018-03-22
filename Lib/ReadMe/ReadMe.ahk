@@ -8,7 +8,7 @@ Class ReadMe extends Parent
 	{
 		$filename	= readme%$suffix%.md
 		$dir	:= this.Directory().path()
-		$file_path	= %$dir%%$filename%
+		$file_path	= %$dir%\%$filename%
 		$message	:= FileExist( $file_path ) ? "FILE EXISTS:`n`n" $filename "`n`n OVERRITDE ?" : "CREATE ?`n`n" $filename
 
 		$answer :=this.MsgBox().confirm("Create readmme.md", $message)
@@ -16,7 +16,7 @@ Class ReadMe extends Parent
 		if(!$answer)
 			return
 			
-		FileAppend, , %$file_path%
+		FileAppend, % "# " this.Directory().name() , %$file_path%
 		this._updateTotalCommander($dir)
 		return this
 	}

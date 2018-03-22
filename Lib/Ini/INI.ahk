@@ -21,14 +21,23 @@ Class INI {
 		PUBLIC METHODS
 	-----------------------------------------------
 	*/
+	/** ini file exits
+	 */
+	exists()
+	{
+		return % FileExist( this.ini.path )
+	}
 	/** set ini File
 	  	@param string $file_path path to ini file, DEFAULT: A_ScriptDir\scriptName.ini
-
 	*/
-	file($file_path:="")
-	{		
+	file( $file_path:="" )
+	{
+		;if( ! $file_path )
+		;	return this.ini.path
+		
 		this.ini.path := ! $file_path ? this._repalceExtensionToIni(A_ScriptFullPath) : $file_path
-	
+		;Dump(this.ini.path, "this.ini.path", 1)
+		
 		if( ! this._isPathAbsolute() )
 			this.ini.path := this._getAbsolutePath(A_ScriptDir, this.ini.path)
 				

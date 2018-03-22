@@ -2,26 +2,28 @@
 */
 Class Directory extends Parent
 {
-	_path	:= "" ; path to current dir
+	_path	:= A_WorkingDir 
 	_name	:= "" ; name of dir
 	
-	__New( $path )
+	__New( )
 	{
-		this._path	:= $path
+		this.name(this._path)
+		;this._path	:= A_ScriptDir
 		
 		;MsgBox,262144,, TcGit, 2
 		;MsgBox,262144,variable, % this._ini,3 
 	}
 	/**
 	 */
-	path( $path:="" )
+	path()
 	{
-		if($path) {
-			this._path := RegExReplace( RegExReplace( $path, "[\\\/]+$", "" ), "/", "\" ) ; "
-			this.name(this._path)			
-		}
+		;if($path) {
+		;	this._path := RegExReplace( RegExReplace( $path, "[\\\/]+$", "" ), "/", "\" ) ; "
+		;	this.name(this._path)			
+		;}
 		
-		return $path ? this : this._path
+		;return $path ? this : this._path
+		return this._path		
 	}
 	/**
 	 */
@@ -31,7 +33,6 @@ Class Directory extends Parent
 			SplitPath, % $path, $dir
 			this._name := $dir
 		}
-		
 		return $name ? this : this._name
 	} 
 

@@ -1,11 +1,11 @@
 ﻿#SingleInstance
 #Include %A_LineFile%\..\..\Lib\TcGit.ahk
 
-$path	:= "c:\GoogleDrive\TotalComander\TC-tools\TC-tool-laravel"
+;$path	:= "c:\GoogleDrive\TotalComander\TC-tools\TC-tool-laravel"
 ;$path	:= "c:\GoogleDrive\TotalComander\TC-tools\laravel"
 ;$path	:= "c:\GoogleDrive\TotalComander\TC-tools\TC-Git"
 
-$TcGit 	:= new TcGit( $path )
+$TcGit 	:= new TcGit()
 
 Dump($TcGit, "TcGit", 1)
 

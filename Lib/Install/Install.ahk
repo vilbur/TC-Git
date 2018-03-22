@@ -2,6 +2,7 @@
 */
 Class Install
 {
+	_Ini 	:= new Ini( )		
 	_TcCommand 	:= new TcCommand()
 	_MsgBox 	:= new MsgBox()		
 	_launcher_path	:= ""
@@ -9,25 +10,34 @@ Class Install
 	
 	__New()
 	{
-		this._launcher_path	:= this._combinePath( A_LineFile, "\..\..\..\TcGitLauncher.ahk" )
-		;Dump(this._launcher_path, "this._launcher_path", 1)
-		this._TcCommand.cmd(this._launcher_path)
+		this._launcher_path	:= A_ScriptFullPath 
+		this._TcCommand.cmd( this._launcher_path )
 	}
 	/**
 	 */
 	install()
 	{
-		;MsgBox,262144,, Test,2
 		if( this._MsgBox.confirm( "Install commands for TcGit ?" ) )
 			this._commands()
+		
+		this._setIniDefaults()			
 		
 		return this
 	}
 	/**
 	 */
+	_setIniDefaults()
+	{
+		this._Ini.set( "config", "username", A_UserName )
+		this._Ini.set( "prefixes" )
+	}
+	
+	/**
+	 */
 	_commands()
 	{
 		this._cmdInitFolder()
+		this._cmdReadme()		
 	}
 	/**
 	 */
@@ -35,12 +45,22 @@ Class Install
 	{
 		this._TcCommand.clone()
 			.name( this._cmd_prefix "ini-folder")
+			.param("init")
 			.menu("Init current folder")
 			.tooltip("TcGit - Init current folder")			
-			.param("%P", "init-folder") ;"
 			.create()
 	} 
-	
+	/**
+	 */
+	_cmdReadme()
+	{
+		this._TcCommand.clone()
+			.name( this._cmd_prefix "create-readme")
+			.param("readme", "-source")
+			.menu("Crate readme	( Ctrl to suffix ""-source"" )")
+			.tooltip("TcGit - Crate readme in current folder")
+			.create()
+	} 
 
 	/** Combine absolute and relative paths
 	*/

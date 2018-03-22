@@ -1,14 +1,17 @@
-
 # TcGit  
 ## Remote Git folders in Total commander  
 
 
 ### command line parameters for TcGitLauncher.exe  
 
-TcGitLauncher.exe __"C:\path\current\folder" command parameters__  
+TcGitLauncher.exe __command parameters__  
 
 #### Commands  
 
-__init-folder__  
+__init__  
 	// init current folder  
+
+__readme__  [__suffix__]  
+	// create readme.md in current folder  
+	// create readme-suffix.mdm if __Control key__ is pressed and suffix parameter is defined  
   
