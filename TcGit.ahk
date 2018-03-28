@@ -30,7 +30,5 @@ else {
 	else if( $command == "readme" )
 		$TcGit.ReadMe().create( GetKeyState("Ctrl", "P") ? $parameter : "" )
 	
-
-	
 }
 

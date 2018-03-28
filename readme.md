@@ -1,5 +1,5 @@
 # TcGit  
-## Remote Git folders in Total commander  
+## Remote GitHub folders in Total commander  
 
 
 ### command line parameters for TcGitLauncher.exe  

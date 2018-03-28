@@ -17,7 +17,12 @@ Class Install
 	 */
 	install()
 	{
-		if( this._MsgBox.confirm( "Install commands for TcGit ?" ) )
+		;MsgBox,262144,, %A_ScriptDir% 
+		MsgBox, 4, , Ddo You want install TC-Git ?
+		IfMsgBox, No
+			return 
+		
+		if( this._MsgBox.confirm( "Install commands for TC-Git ?" ) )
 			this._commands()
 		
 		this._setIniDefaults()			
@@ -38,19 +43,32 @@ Class Install
 	 */
 	_commands()
 	{
-		this._cmdInitFolder()
+		this._cmdInstallFolder()
+		this._cmdInitFolder()		
 		this._cmdCreateDir()
 		this._cmdReadme()				
+	}
+	/**
+	 */
+	_cmdInstallFolder()
+	{
+		this._TcCommand.clone()
+			.name( this._cmd_prefix "install")
+			.param("install")
+			.menu("Install TC-Git")
+			.tooltip("TcGit - Install")			
+			.create()
 	}
 	/**
 	 */
 	_cmdInitFolder()
 	{
 		this._TcCommand.clone()
-			.name( this._cmd_prefix "ini-folder")
+			.name( this._cmd_prefix "init")
 			.param("init")
 			.menu("Init current folder")
 			.tooltip("TcGit - Init current folder")			
+			.icon(A_ScriptDir "\icons\init.ico")			
 			.create()
 	}
 	/**
@@ -62,6 +80,7 @@ Class Install
 			.param("create-dir")
 			.menu("Crate directory")
 			.tooltip("TcGit - Crate directory in current folder")
+			.icon(A_ScriptDir "\icons\create.ico")			
 			.create()
 	} 
 
@@ -74,6 +93,7 @@ Class Install
 			.param("readme", "-source")
 			.menu("Crate readme.md	( Ctrl to suffix ""-source"" )")
 			.tooltip("TcGit - Crate readme.md in current folder")
+			.icon(A_ScriptDir "\icons\readme.ico")			
 			.create()
 	} 
 

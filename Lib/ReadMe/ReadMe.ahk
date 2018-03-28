@@ -16,19 +16,22 @@ Class ReadMe extends Parent
 
 		if( $force==false && ! $answer )
 			return
-			
+
 		FileDelete, %$file_path%
 		FileAppend, % "# " this.Directory().name() , %$file_path%
 		this._updateTotalCommander($dir)
 		return this
 	}
-	
+
 	/**
 	 */
 	_updateTotalCommander($dir)
 	{
-		Run, %COMMANDER_PATH%\TOTALCMD64.EXE /O /S /L=%$dir%
-	} 
+		WinGet, $hwnd , ID, ahk_class TTOTAL_CMD
+		WinGet, $process_name , ProcessName, %$hwnd%
 
-	
+		Run, %COMMANDER_PATH%\%$process_name% /O /S /L=%$dir%
+	}
+
+
 }
