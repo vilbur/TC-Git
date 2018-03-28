@@ -6,8 +6,15 @@ Class Install
 	_TcCommand 	:= new TcCommand()
 	_MsgBox 	:= new MsgBox()		
 	_launcher_path	:= ""
-	_cmd_prefix	:= "TcGit-"
-	
+
+		;;;COMMAND	       MENU	       TOOLTIP	       ICON	PARAMETERS
+	_commands :=	{"install":	[ "Install",	"Install",	"",	""	]
+		,"init":	[ "Init current folder",	"Init current folder",	A_ScriptDir "\icons\init.ico",	""	]
+		,"create-dir":	[ "Crate directory",	"Crate directory in current folder",	A_ScriptDir "\icons\create.ico",	""	]
+		,"create-readme":	[ "Crate directory",	"Crate readme.md",	A_ScriptDir "\icons\readme.ico",	"-source"	]
+		,"browser":	[ "Open on GitHub",	"Open on GitHub ( Ctrl open in root)",	A_ScriptDir "\icons\browser.ico",	""	]					
+		,"command-line":	[ "Open command line",	"Open command line in repository",	A_ScriptDir "\icons\command-line.ico",	""	]}
+
 	__New()
 	{
 		this._launcher_path	:= A_ScriptFullPath 
@@ -17,13 +24,12 @@ Class Install
 	 */
 	install()
 	{
-		;MsgBox,262144,, %A_ScriptDir% 
 		MsgBox, 4, , Ddo You want install TC-Git ?
 		IfMsgBox, No
 			return 
 		
 		if( this._MsgBox.confirm( "Install commands for TC-Git ?" ) )
-			this._commands()
+			this.createCommands()
 		
 		this._setIniDefaults()			
 		
@@ -35,67 +41,24 @@ Class Install
 	{
 		this._Ini.set( "config", "username", A_UserName )
 		this._Ini.set( "prefixes" )
-		this._Ini.set( "gitignore-defaults", "*.bak" )
-		this._Ini.set( "gitignore-defaults", ".komodotools" )				
+		this._Ini.set( "gitignore-defaults",	"*.bak" )
+		this._Ini.set( "gitignore-defaults",	".komodotools" )
+		this._Ini.set( "command-line",	"path",	"cmd.exe" )						
 	}
-	
-	/**
-	 */
-	_commands()
-	{
-		this._cmdInstallFolder()
-		this._cmdInitFolder()		
-		this._cmdCreateDir()
-		this._cmdReadme()				
-	}
-	/**
-	 */
-	_cmdInstallFolder()
-	{
-		this._TcCommand.clone()
-			.name( this._cmd_prefix "install")
-			.param("install")
-			.menu("Install TC-Git")
-			.tooltip("TcGit - Install")			
-			.create()
-	}
-	/**
-	 */
-	_cmdInitFolder()
-	{
-		this._TcCommand.clone()
-			.name( this._cmd_prefix "init")
-			.param("init")
-			.menu("Init current folder")
-			.tooltip("TcGit - Init current folder")			
-			.icon(A_ScriptDir "\icons\init.ico")			
-			.create()
-	}
-	/**
-	 */
-	_cmdCreateDir()
-	{
-		this._TcCommand.clone()
-			.name( this._cmd_prefix "create-dir")
-			.param("create-dir")
-			.menu("Crate directory")
-			.tooltip("TcGit - Crate directory in current folder")
-			.icon(A_ScriptDir "\icons\create.ico")			
-			.create()
-	} 
 
 	/**
 	 */
-	_cmdReadme()
+	createCommands()
 	{
-		this._TcCommand.clone()
-			.name( this._cmd_prefix "create-readme")
-			.param("readme", "-source")
-			.menu("Crate readme.md	( Ctrl to suffix ""-source"" )")
-			.tooltip("TcGit - Crate readme.md in current folder")
-			.icon(A_ScriptDir "\icons\readme.ico")			
-			.create()
-	} 
+		For $command, $values in this._commands
+			this._TcCommand.clone()
+				.name( "TC-Git-" $command)
+				.param($command, $values[4])
+				.menu( "TC-Git - " $values[1])
+				.tooltip("TC-Git - " $values[2])
+				.icon($values[3])			
+				.create()	 
+	}
 
 	/** Combine absolute and relative paths
 	*/

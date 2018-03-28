@@ -64,7 +64,7 @@ Class TCcommand
 	 */
 	icon( $icon )
 	{
-		this._button := $icon
+		this._button :=this._replaceCommanderPathEnvVariable($icon)
 		return this 		
 	}
 	/**
@@ -99,8 +99,6 @@ Class TCcommand
 		return this._shortcut
 	}
 	
-	
-	
 	/** escape and quote %T & %P parameter
 	 */
 	_escapeParameter( $param )
@@ -128,10 +126,10 @@ Class TCcommand
 	/** Replace path to %COMMANDER_PATH% back
 			E.G.: "C:\TotalCommander" >>> "%COMMANDER_PATH%"
 	 */
-	_replaceCommanderPathEnvVariable( $cmd )
+	_replaceCommanderPathEnvVariable( $path )
 	{
 		$commander_path_rx := RegExReplace( this._commander_path, "i)[\\\/]+", "\\" )
-		return % RegExReplace( $cmd, "i)" $commander_path_rx, "%COMMANDER_PATH%" ) 
+		return % RegExReplace( $path, "i)" $commander_path_rx, "%COMMANDER_PATH%" ) 
 	}
 	
 }

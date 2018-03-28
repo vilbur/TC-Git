@@ -4,7 +4,7 @@
 */
 Class TcGit extends Accessors
 {
-	;_Ini 	:= new Ini( A_ScriptDir "\TcGit.ini" )
+	;;;_Ini 	:= new Ini( A_ScriptDir "\TcGit.ini" )
 	_Ini 	:= new Ini()		
 	_Repository 	:= new Repository().Parent(this)	
 	_Directory 	:= new Directory().Parent(this)
@@ -14,7 +14,8 @@ Class TcGit extends Accessors
 
 	_username	:= ""	
 	
-	_commands :=	{"init":	"init"
+	_commands :=	{"git":	"git"
+		,"init":	"init"
 		,"ignorecase":	"config core.ignorecase false"
 		,"add-all":	"add ."
 		,"push":	"origin master"		
@@ -24,14 +25,18 @@ Class TcGit extends Accessors
 		,"reset":	"--hard origin/master"
 		,"remote-add":	"remote add origin"
 		,"remote-set":	"set-url origin"		
-		,"git":	""
 		,"":	""}
 	
 	_commands_run	:= [] ; commands to _run
 	
-	__New()
+	__New( $repo_state:="initialized" )
 	{
+		this._Directory.setRoot($repo_state)
+		
+		this._Repository.setUrl($repo_state)
+
 		;Dump(this, "this.", 1)
+		;this._initUrl()
 	}
 	/**
 	 */
@@ -57,12 +62,12 @@ Class TcGit extends Accessors
 	{
 		this._initUrl()
 		
-		$origin	:= this.Repository().getOrigin()
+		$origin	:= this._Repository.getOrigin()
 		;MsgBox,262144,origin, %$origin%,3 
 		;$remote_cmd	:= $origin ? "remote-set" : "remote-add"
 		$result	:= this.cmd("init")
 					.cmd("ignorecase")
-					.cmd($origin ? "remote-set" : "remote-add", this.Repository()._url)
+					.cmd($origin ? "remote-set" : "remote-add", this._Repository._url)
 					.run()
 
 		
@@ -71,8 +76,18 @@ Class TcGit extends Accessors
 		else
 			this.MsgBox().exit( "Error occurred`n" $result)
 	}
-
-
+	/** open GitHub repository in browser
+	  *
+	  * open on url in current subfolder,
+	  * open in root if Control key is pressed
+	 */
+	openBrowser()
+	{
+		$control_key	:= GetKeyState("control", "P") 
+		;MsgBox,262144,control_key, %$control_key%,3 
+		$url := $control_key || this.Directory().path()==this.Directory().path("current") ? this._Repository._url : this._Repository.getTreeUrl()
+		Run %$url%
+	}
 	
 	;;;;/** Add or set remote url if exists
 	;;; * CURRENTLY UNUSED
@@ -85,7 +100,6 @@ Class TcGit extends Accessors
 	;;;	$result	:= this.cmd($cmd, this.Repository()._url)._run()		
 	;;;}
 	
-	
 	/*
 	-----------------------------------------------
 		PRIVATE METHODS
@@ -93,7 +107,7 @@ Class TcGit extends Accessors
 	*/
 	_initUrl(){
 		this._setUsername()
-		this.Repository().setUrl()
+		;this._Repository.setUrl()
 		this._savePrefix()
 	}
 	
@@ -101,8 +115,8 @@ Class TcGit extends Accessors
 	 */
 	_savePrefix()
 	{
-		$repository_name	:= this.Repository().name()
-		$directory_name	:= this.Directory().name()
+		$repository_name	:= this._Repository.name()
+		$directory_name	:= this._Directory.name()
 		if ( $repository_name != $directory_name && RegExMatch( $repository_name, "i)" $directory_name ) )
 			this._Ini.set( "prefixes", RegExReplace( $repository_name, "i)(.*-)" $directory_name, "$1" )   )
 	}
@@ -127,9 +141,10 @@ Class TcGit extends Accessors
 	 */
 	_runCmd( $commands )
 	{
-		$cd_repository	:= "cd " this.Directory().path() 
+		$cd_repository	:= "cd " this._Directory.path() 
 		this._commands_run	:= []
-		;MsgBox,262144,$commands, %$commands% 
+		;MsgBox,262144,$commands, %$commands%
+		;MsgBox,262144,cd_repository, %$cd_repository% 
 		return % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c " $cd_repository $commands ).StdOut.ReadAll()
 	}
 

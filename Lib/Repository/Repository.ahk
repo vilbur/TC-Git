@@ -20,25 +20,32 @@ Class Repository extends Parent
 	 */
 	getOrigin()
 	{
-		return % RegExMatch( this._runCmd( "git config --get remote.origin.url" ), "i)^https.*\.git" )
+		return % RegExReplace( this.Parent()._runCmd( " &&git config --get remote.origin.url" ), "\s+$", "" ) 		
 	}	
 	/** set url to repository
 		try to find repository, if $repository_url not defined or url not exist
 	 */
-	setUrl( $repository_url:="" )
+	setUrl( $repo_state:="" )
 	{
-		if( $repository_url )
-			this._url := $repository_url
-			
-		else if( this.Directory().hasGitFolder() )
+		if( $repo_state=="initialized" )
 			this._url := this.getOrigin()
-			
-		else if( ! this.exists( $repository_url) )
+
+		if( ! this.exists( this._url ) )
 			this._url := this._findUrl()
 		
 		this.name( this._url )
 		return this
-	}	
+	}
+	/** get url inside tree E.G.: https://github.com/vilbur/Repository/tree/master/subfolder
+	 */
+	getTreeUrl()
+	{
+		$rx_root	:= RegExReplace( this.Directory().path(), "[\\\/]", "\\" )
+		$relative_path	:= RegExReplace( this.Directory().path("current") , $rx_root , "/tree/master" )
+		$url 	:= RegExReplace( this._url, "\.git$", "" )
+		return % $url RegExReplace( $relative_path, "[\\]+", "/" )
+		
+	}
 	/** Try set url combining username, folder name
 	 */
 	_findUrl()
@@ -101,10 +108,9 @@ Class Repository extends Parent
 	/** Test if repository exitst
 		https://autohotkey.com/board/topic/97102-how-to-check-if-a-url-exists-or-notproblem-with-urldownloadtofile/
 	 */
-	exists( $repository_url:="" )
+	exists( $url )
 	{
-		$repository_url := $repository_url ? $repository_url : this._url
-		return % this._getUrlStatus( $repository_url ) == 200
+		return % this._getUrlStatus( $url ) == 200
 	}
 	/*
 	 */

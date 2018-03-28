@@ -1,25 +1,50 @@
-﻿/** Class Directory
+﻿/** Local Directory of git hub repository
 */
 Class Directory extends Parent
 {
-	_path	:= A_WorkingDir 
+	;_path	:= A_WorkingDir
+	;_current	:= A_WorkingDir
+	;_repository	:=
 	_name	:= "" ; name of dir
 	
-	__New()
+	_paths	:=	{"root":	A_WorkingDir
+			,"current":	A_WorkingDir}
+			
+			
+	setRoot($repo_state:="initialized")
 	{
-		this.name(this._path)
-	}
-	/**
-	 */
-	path( $path:="" )
-	{
-		if($path) {
-			this._path := RegExReplace( RegExReplace( $path, "[\\\/]+$", "" ), "/", "\" ) ; "
-			this.name(this._path)			
-		}
+		if( $repo_state=="initialized" && ! this.hasGitFolder(this.path("current")))
+			this._searchRoot()
+
 		
-		return $path ? this : this._path
+		this.name(this._paths.root)
 	}
+	/** search for in tree for .git folder
+	 */
+	_searchRoot()
+	{
+		$path := this.path("current")
+		
+		While $path != $drive
+		{
+			if( this.hasGitFolder($path) ){
+				this._paths.root	:= $path
+				break
+			}
+			SplitPath, $path,, $path,,, $drive
+		}
+		if( $path == $drive )
+			this.MsgBox().exit( "LOCAL REPOSITORY DOES NOT EXISTS.`n`n In path:`n" this.path("current") "`n`n", 10)
+	}
+
+	/** get path to root or current folder
+	  *
+	  */
+	path( $path:="root" )
+	{
+		return $path=="root" ? this._paths.root : this._paths.current
+	}
+	
 	/**
 	 */
 	name( $path:="" )
@@ -48,9 +73,9 @@ Class Directory extends Parent
 	}
 	/**
 	 */
-	hasGitFolder()
+	hasGitFolder($dir)
 	{
-		return % InStr( (FileExist this.name() "\.git") , "X" ) != 0
+		return % InStr(FileExist($dir "\.git"), "D") != 0		
 	}	
 
 	

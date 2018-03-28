@@ -7,7 +7,8 @@ Class MsgBox
 {
 
 	_params	:= []
-	_title	:= ""	
+	_title	:= ""
+	_title_default	:= ""		
 	_message	:= ""
 	_timeout	:= ""
 	_button	:= ""
@@ -72,6 +73,11 @@ Class MsgBox
 	 */
 	exit( $params* )
 	{
+		this._findParamsTitleAndMessage()
+
+		if( ! this._title )
+			this._title_default := "ERROR - " A_ScriptName ; set default error title
+		
 		this.message($params*)
 		ExitApp
 	}
@@ -118,7 +124,7 @@ Class MsgBox
 		*/
 		if( this._title && ! this._message ){
 			this._message	:= this._title
-			this._title	:= ""
+			this._title	:= this._title_default
 		}
 			
 		
