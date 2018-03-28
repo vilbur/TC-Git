@@ -11,7 +11,8 @@ Class Install
 	_commands :=	{"install":	[ "Install",	"Install",	"",	""	]
 		,"init":	[ "Init current folder",	"Init current folder",	A_ScriptDir "\icons\init.ico",	""	]
 		,"create-dir":	[ "Crate directory",	"Crate directory in current folder",	A_ScriptDir "\icons\create.ico",	""	]
-		,"create-readme":	[ "Crate directory",	"Crate readme.md",	A_ScriptDir "\icons\readme.ico",	"-source"	]
+		,"create-readme":	[ "Crate readme.md",	"Crate readme.md file",	A_ScriptDir "\icons\readme.ico",	"-source"	]
+		,"create-ignore":	[ "Crate .gitignore",	"Crate ignore file",	A_ScriptDir "\icons\ignore-file.ico",	""	]		
 		,"browser":	[ "Open on GitHub",	"Open on GitHub ( Ctrl open in root)",	A_ScriptDir "\icons\browser.ico",	""	]					
 		,"command-line":	[ "Open command line",	"Open command line in repository",	A_ScriptDir "\icons\command-line.ico",	""	]}
 
@@ -24,7 +25,7 @@ Class Install
 	 */
 	install()
 	{
-		MsgBox, 4, , Ddo You want install TC-Git ?
+		MsgBox, 4, , Do You want install TC-Git ?
 		IfMsgBox, No
 			return 
 		

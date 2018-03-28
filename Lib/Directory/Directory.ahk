@@ -58,16 +58,26 @@ Class Directory extends Parent
 	/** create new dir with readme.me and ignore file
 	  
 	 */
-	create()
+	cloneOrCreate()
 	{
-		$dir_name := this.MsgBox().input( "CREATE DIR", "New directory name" )
+		$dir_name_or_url := this.MsgBox().input( "CREATE OR CLONE REPOSITORY ", "Enter directory name to create new or url for clone" )
+		
+		if( this.Repository().exists( $dir_name_or_url ) )
+			this.Repository().setUrl( $dir_name_or_url )
+			
+		$dir_name := this.MsgBox().input( "CREATE OR CLONE REPOSITORY ", "Enter directory name", {"default": this.Repository().name()} )
+			
 		if( ! $dir_name )
 			ExitApp
 		
-		this.path( this.path() "\\" $dir_name ) 	
+		this._paths.root	:= this.path() "\\" $dir_name
+		this._paths.current	:= this._paths.root
 		
 		FileCreateDir, % this.path()
-
+		
+		if( this.Repository()._url )
+			this.Parent().init().cmd("pull").run()
+		
 		this.ReadMe().create()
 		this.GitIgnore().create()
 	}
@@ -81,4 +91,14 @@ Class Directory extends Parent
 	
 	
 }
+
+
+
+
+
+
+
+
+
+
 

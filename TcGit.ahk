@@ -15,18 +15,27 @@ if( $command == "install" )
 	new Install().install()
 
 else if( $command == "init" )
-	new TcGit("newRoot").init()
+	new TcGit("init").init()
 	
+else if( $command == "create-dir" ){
+		$TcGit 	:= new TcGit("cloneOrCreate")
+	$TcGit.Directory().cloneOrCreate()
+
+	
+}
+	;new TcGit("create-dir").Directory().create()	
+		
 else
 {
 	$TcGit 	:= new TcGit()
 		
-	if( $command == "create-dir" )
-		$TcGit.Directory().create()
-	
-	else if( $command == "readme" )
+	if( $command == "create-readme" )
 		$TcGit.ReadMe().create( GetKeyState("Ctrl", "P") ? $parameter : "" )
 		
+	if( $command == "create-ignore" )
+		$TcGit.GitIgnore().create()
+		
+			
 	else if( $command == "command-line" ){
 		$cmd := "cmd.exe /K cd " $TcGit.Directory().path()
 		Run *RunAs %$cmd%

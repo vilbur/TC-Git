@@ -18,8 +18,8 @@ Class TcGit extends Accessors
 		,"init":	"init"
 		,"ignorecase":	"config core.ignorecase false"
 		,"add-all":	"add ."
-		,"push":	"origin master"		
-		,"pull":	"origin master"
+		;,"push":	"origin master"		
+		,"pull":	"pull origin master"
 		,"fetch":	"fetch --all"
 		,"commit":	""
 		,"reset":	"--hard origin/master"
@@ -31,9 +31,11 @@ Class TcGit extends Accessors
 	
 	__New( $repo_state:="initialized" )
 	{
-		this._Directory.setRoot($repo_state)
-		
-		this._Repository.setUrl($repo_state)
+		;MsgBox,262144,repo_state, %$repo_state%,3 
+		if($repo_state!="cloneOrCreate"){
+			this._Directory.setRoot($repo_state)
+			this._Repository.setUrl($repo_state)
+		}
 
 		;Dump(this, "this.", 1)
 		;this._initUrl()
@@ -60,21 +62,22 @@ Class TcGit extends Accessors
 	 */
 	init()
 	{
-		this._initUrl()
-		
+		this._setUsername()
+		this._savePrefix()		
+
 		$origin	:= this._Repository.getOrigin()
-		;MsgBox,262144,origin, %$origin%,3 
-		;$remote_cmd	:= $origin ? "remote-set" : "remote-add"
+
 		$result	:= this.cmd("init")
 					.cmd("ignorecase")
 					.cmd($origin ? "remote-set" : "remote-add", this._Repository._url)
 					.run()
-
 		
 		if( RegExMatch( $result, "^Initialized empty Git repository" ) )
 			this.MsgBox().message($result, 10)
 		else
 			this.MsgBox().exit( "Error occurred`n" $result)
+			
+		return this
 	}
 	/** open GitHub repository in browser
 	  *
@@ -86,6 +89,7 @@ Class TcGit extends Accessors
 		$control_key	:= GetKeyState("control", "P") 
 		;MsgBox,262144,control_key, %$control_key%,3 
 		$url := $control_key || this.Directory().path()==this.Directory().path("current") ? this._Repository._url : this._Repository.getTreeUrl()
+
 		Run %$url%
 	}
 	
@@ -105,11 +109,11 @@ Class TcGit extends Accessors
 		PRIVATE METHODS
 	-----------------------------------------------
 	*/
-	_initUrl(){
-		this._setUsername()
-		;this._Repository.setUrl()
-		this._savePrefix()
-	}
+	;_initUrl(){
+	;	this._setUsername()
+	;	;this._Repository.setUrl()
+	;	this._savePrefix()
+	;}
 	
 	/**
 	 */
@@ -127,7 +131,6 @@ Class TcGit extends Accessors
 		this._username := this._Ini.get( "config", "username" )
 	} 
 	
-	
 	/** 
 	 */
 	_joinCommands()
@@ -144,7 +147,8 @@ Class TcGit extends Accessors
 		$cd_repository	:= "cd " this._Directory.path() 
 		this._commands_run	:= []
 		;MsgBox,262144,$commands, %$commands%
-		;MsgBox,262144,cd_repository, %$cd_repository% 
+		;MsgBox,262144,cd_repository, %$cd_repository%
+		;MsgBox,262144,cd_repository, %  $cd_repository $commands 
 		return % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c " $cd_repository $commands ).StdOut.ReadAll()
 	}
 

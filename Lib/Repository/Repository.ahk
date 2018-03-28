@@ -25,9 +25,14 @@ Class Repository extends Parent
 	/** set url to repository
 		try to find repository, if $repository_url not defined or url not exist
 	 */
-	setUrl( $repo_state:="" )
+	setUrl( $url:="" )
 	{
-		if( $repo_state=="initialized" )
+		;MsgBox,262144,url, %$url%,3 
+		if( this.exists( $url ) )
+			this._url := $url
+
+		else
+		if( $url=="initialized" )
 			this._url := this.getOrigin()
 
 		if( ! this.exists( this._url ) )
