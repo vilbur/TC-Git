@@ -112,7 +112,17 @@ Class MsgBox
 		if($length>1){
 			this._title 	:= this._isString(this._params[1]) ? this._params[1] : ""
 			this._message	:= this._isString(this._params[2]) ? this._params[2] : ""
-		}	
+		}
+		
+		/* If title is not defined
+		*/
+		if( this._title && ! this._message ){
+			this._message	:= this._title
+			this._title	:= ""
+		}
+			
+		
+		
 	} 
 	/** Find options object
 		It is object in parameters 

@@ -9,7 +9,7 @@
 #Include %A_LineFile%\..\MsgBox\MsgBox.ahk
 #Include %A_LineFile%\..\Ini\Ini.ahk
 
-#Include %A_LineFile%\..\TcCommand\TcCommand.ahk
-#Include %A_LineFile%\..\TcCommand\TcShortcut.ahk
+#Include %A_LineFile%\..\Install\TcCommand\TcCommand.ahk
+#Include %A_LineFile%\..\Install\TcCommand\TcShortcut.ahk
 
 

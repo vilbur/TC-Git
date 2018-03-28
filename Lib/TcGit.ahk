@@ -27,13 +27,70 @@ Class TcGit extends Accessors
 		,"git":	""
 		,"":	""}
 	
-	_run	:= [] ; commands to run
+	_commands_run	:= [] ; commands to _run
 	
 	__New()
 	{
 		;Dump(this, "this.", 1)
 	}
+	/**
+	 */
+	cmd( $cmd, $params:="" )
+	{
+		if( this._commands.hasKey($cmd) )
+			this._commands_run.push({ "cmd": this._commands[$cmd], "params": $params })
+		else
+			this.MsgBox().exit( "TcGit - ERROR", "COMMAND """ $cmd """ DOES NOT EXISTS.`n`n		TcGit will exit." )
+			
+		return this
+	}
+	/**
+	 */
+	run()
+	{
+		return % this._runCmd( this._joinCommands() )
+	}
 	
+	/** INIT FOLDER, IGNORE CASE, SET URL
+	 */
+	init()
+	{
+		this._initUrl()
+		
+		$origin	:= this.Repository().getOrigin()
+		;MsgBox,262144,origin, %$origin%,3 
+		;$remote_cmd	:= $origin ? "remote-set" : "remote-add"
+		$result	:= this.cmd("init")
+					.cmd("ignorecase")
+					.cmd($origin ? "remote-set" : "remote-add", this.Repository()._url)
+					.run()
+
+		
+		if( RegExMatch( $result, "^Initialized empty Git repository" ) )
+			this.MsgBox().message($result, 10)
+		else
+			this.MsgBox().exit( "Error occurred`n" $result)
+	}
+
+
+	
+	;;;;/** Add or set remote url if exists
+	;;; * CURRENTLY UNUSED
+	;;; * 
+	;;; */
+	;;;setRemote()
+	;;;{
+	;;;	$origin	:= this.Repository().getOrigin()
+	;;;	$cmd	:= $origin ? "remote-set" : "remote-add"
+	;;;	$result	:= this.cmd($cmd, this.Repository()._url)._run()		
+	;;;}
+	
+	
+	/*
+	-----------------------------------------------
+		PRIVATE METHODS
+	-----------------------------------------------
+	*/
 	_initUrl(){
 		this._setUsername()
 		this.Repository().setUrl()
@@ -55,58 +112,27 @@ Class TcGit extends Accessors
 	{
 		this._username := this._Ini.get( "config", "username" )
 	} 
-	/**
-	 */
-	cmd( $cmd, $params:="" )
-	{
-		if( this._commands.hasKey($cmd) )
-			this._run.push({ "cmd": this._commands[$cmd], "params": $params })
-		else
-			this.MsgBox().exit( "TcGit - ERROR", "COMMAND """ $cmd """ DOES NOT EXISTS.`n`nTcGit will exit." )
-			
-		return this
-	}
-	/** 
-	 */
-	init()
-	{
-		this._initUrl()
-		$result := this.cmd("init").cmd("ignorecase").run()
-		;Dump($result, "result", 1)
-		if( RegExMatch( $result, "^Initialized empty Git repository" ) )
-			this.MsgBox().message($result)
-		else
-			this.MsgBox().exit( "Error occurred`n" $result)
-	}
-
-	/**
-	 */
-	run()
-	{
-		;Dump(this._joinCommands(), "this._joinCommands()", 1)
-		return % this._runCmd( this._joinCommands() )
-	}
+	
+	
 	/** 
 	 */
 	_joinCommands()
 	{
-		For $i, $cmd_obj in this._run
+		For $i, $cmd_obj in this._commands_run
 			$run_cmd	.= " &&git " $cmd_obj.cmd " " $cmd_obj.params
 		return %$run_cmd% 
 	}
-	/** run commands
+	/** _run commands
 		@param string $commands
 	 */
 	_runCmd( $commands )
 	{
 		$cd_repository	:= "cd " this.Directory().path() 
-		this._run	:= []
-
+		this._commands_run	:= []
+		;MsgBox,262144,$commands, %$commands% 
 		return % ComObjCreate("WScript.Shell").Exec("cmd.exe /q /c " $cd_repository $commands ).StdOut.ReadAll()
-		
 	}
 
-	
 	/** set\get parent class
 	 * @return object parent class
 	*/
