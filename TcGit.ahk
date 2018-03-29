@@ -10,6 +10,7 @@ StringLower, $command, $command
 if( ! new Ini().exists() )
 	new Install().install()
 
+$TcGit := new TcGit($command)
 
 if( $command == "install" )
 	new Install().install()
@@ -17,25 +18,19 @@ if( $command == "install" )
 else if( $command == "init" )
 	new TcGit("init").init()
 	
-else if( $command == "create-dir" ){
-		$TcGit 	:= new TcGit("cloneOrCreate")
+else if( $command == "create-dir" )
 	$TcGit.Directory().cloneOrCreate()
-
 	
-}
-	;new TcGit("create-dir").Directory().create()	
+else if( $command == "create-readme" )
+	$TcGit.ReadMe().create( GetKeyState("Ctrl", "P") ? $parameter : "" )
+
 		
 else
 {
-	$TcGit 	:= new TcGit()
-		
-	if( $command == "create-readme" )
-		$TcGit.ReadMe().create( GetKeyState("Ctrl", "P") ? $parameter : "" )
-		
+
 	if( $command == "create-ignore" )
 		$TcGit.GitIgnore().create()
 		
-			
 	else if( $command == "command-line" ){
 		$cmd := "cmd.exe /K cd " $TcGit.Directory().path()
 		Run *RunAs %$cmd%

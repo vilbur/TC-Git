@@ -29,16 +29,21 @@ Class TcGit extends Accessors
 	
 	_commands_run	:= [] ; commands to _run
 	
-	__New( $repo_state:="initialized" )
+	/**
+	  * @param string $parameter 
+	  *
+	  *		search:	default, search .git folder
+	  *		init:	will find url to repository
+	  *		do nothing:	for create readme
+	  *
+	  */
+	__New( $parameter )
 	{
-		;MsgBox,262144,repo_state, %$repo_state%,3 
-		if($repo_state!="cloneOrCreate"){
-			this._Directory.setRoot($repo_state)
-			this._Repository.setUrl($repo_state)
+		if( ! RegExMatch( $parameter, "i)(create-dir|create-readme)" ) )
+		{
+			this._Directory.setRoot($parameter)
+			this._Repository.setUrl($parameter)
 		}
-
-		;Dump(this, "this.", 1)
-		;this._initUrl()
 	}
 	/**
 	 */

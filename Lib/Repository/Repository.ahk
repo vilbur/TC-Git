@@ -31,9 +31,8 @@ Class Repository extends Parent
 		if( this.exists( $url ) )
 			this._url := $url
 
-		else
-		if( $url=="initialized" )
-			this._url := this.getOrigin()
+		else if( $url!="init" )
+				this._url := this.getOrigin()
 
 		if( ! this.exists( this._url ) )
 			this._url := this._findUrl()

@@ -9,21 +9,11 @@ Class ReadMe extends File
 		$filename	= readme%$suffix%.md
 		$dir	:= this.Directory().path("current")
 		SplitPath, $dir, $dir_name
-		
+		;Dump($dir, "dir", 1)
 		$content	:= "# " $dir_name
 
 		this.createFile( $dir, $filename, $content )
 	}
-
-	;/**
-	; */
-	;_updateTotalCommander($dir)
-	;{
-	;	WinGet, $hwnd , ID, ahk_class TTOTAL_CMD
-	;	WinGet, $process_name , ProcessName, %$hwnd%
-	;
-	;	Run, %COMMANDER_PATH%\%$process_name% /O /S /L=%$dir%
-	;}
 
 
 }

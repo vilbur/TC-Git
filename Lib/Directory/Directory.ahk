@@ -11,17 +11,16 @@ Class Directory extends Parent
 			,"current":	A_WorkingDir}
 			
 			
-	setRoot($repo_state:="initialized")
+	setRoot($repo_state)
 	{
-		if( $repo_state=="initialized" && ! this.hasGitFolder(this.path("current")))
-			this._searchRoot()
-
+		if( ! $repo_state=="init" && ! this.hasGitFolder(this.path("current")))
+			this._searchGitFolder()
 		
 		this.name(this._paths.root)
 	}
 	/** search for in tree for .git folder
 	 */
-	_searchRoot()
+	_searchGitFolder()
 	{
 		$path := this.path("current")
 		
