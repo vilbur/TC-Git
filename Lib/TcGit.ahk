@@ -91,8 +91,10 @@ Class TcGit extends Accessors
 	 */
 	openBrowser()
 	{
+		Dump(this, "this.", 1)
+		
 		$control_key	:= GetKeyState("control", "P") 
-		;MsgBox,262144,control_key, %$control_key%,3 
+
 		$url := $control_key || this.Directory().path()==this.Directory().path("current") ? this._Repository._url : this._Repository.getTreeUrl()
 
 		Run %$url%

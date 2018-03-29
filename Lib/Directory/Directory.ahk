@@ -13,7 +13,7 @@ Class Directory extends Parent
 			
 	setRoot($repo_state)
 	{
-		if( ! $repo_state=="init" && ! this.hasGitFolder(this.path("current")))
+		if( $repo_state!="init" && ! this.hasGitFolder(this.path("current")))
 			this._searchGitFolder()
 		
 		this.name(this._paths.root)
