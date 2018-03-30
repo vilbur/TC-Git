@@ -13,8 +13,10 @@ Class Install
 		,"create-dir":	[ "Crate directory",	"Crate directory in current folder",	A_ScriptDir "\icons\create.ico",	""	]
 		,"create-readme":	[ "Crate readme.md",	"Crate readme.md file",	A_ScriptDir "\icons\readme.ico",	"-source"	]
 		,"create-ignore":	[ "Crate .gitignore",	"Crate ignore file",	A_ScriptDir "\icons\ignore-file.ico",	""	]		
-		,"browser":	[ "Open on GitHub",	"Open on GitHub ( Ctrl open in root)",	A_ScriptDir "\icons\browser.ico",	""	]					
+		,"browser":	[ "Open on GitHub",	"Open on GitHub ( Ctrl open in root)",	A_ScriptDir "\icons\browser.ico",	""	]
+		,"kraken":	[ "Open GitKraken",	"Open GitKraken ( Ctrl close others)",	A_ScriptDir "\icons\git-kraken.ico",	""	]							
 		,"command-line":	[ "Open command line",	"Open command line in repository",	A_ScriptDir "\icons\command-line.ico",	""	]}
+		
 
 	__New()
 	{

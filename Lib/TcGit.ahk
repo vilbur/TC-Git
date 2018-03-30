@@ -91,7 +91,6 @@ Class TcGit extends Accessors
 	 */
 	openBrowser()
 	{
-		Dump(this, "this.", 1)
 		
 		$control_key	:= GetKeyState("control", "P") 
 
@@ -99,7 +98,28 @@ Class TcGit extends Accessors
 
 		Run %$url%
 	}
-	
+	/** open GitKraken
+	  * close other instances on ctrl key pressed
+	  *
+	  * @param boolean $control_key
+	 */
+	openKraken( $control_key )
+	{
+		if( $control_key )
+			Run, taskkill /im gitkraken.exe /f,,hide
+
+		
+		$kraken_highest_version := ""
+		loop, %AppData%\..\Local\gitkraken\*.*, 2, 0
+			if( RegExMatch( A_LoopFileName  , "i)app-.*" ) )
+				$kraken_highest_version := A_LoopFileName
+			 
+		if( $kraken_highest_version ){
+			$path = %AppData%\..\Local\gitkraken\%$kraken_highest_version%\gitkraken.exe
+			Run,  % $path " -p """ this.Directory().path() """"
+		}
+			
+	}
 	;;;;/** Add or set remote url if exists
 	;;; * CURRENTLY UNUSED
 	;;; * 
