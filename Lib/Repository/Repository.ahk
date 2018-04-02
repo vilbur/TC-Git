@@ -27,12 +27,11 @@ Class Repository extends Parent
 	 */
 	setUrl( $url:="" )
 	{
-		;MsgBox,262144,url, %$url%,3 
 		if( this.exists( $url ) )
 			this._url := $url
 
 		else if( $url!="init" )
-				this._url := this.getOrigin()
+			this._url := this.getOrigin()
 
 		if( ! this.exists( this._url ) )
 			this._url := this._findUrl()

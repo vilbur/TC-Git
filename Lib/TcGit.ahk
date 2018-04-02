@@ -39,6 +39,8 @@ Class TcGit extends Accessors
 	  */
 	__New( $parameter )
 	{
+		this._setUsername()
+
 		if( ! RegExMatch( $parameter, "i)(create-dir|create-readme)" ) )
 		{
 			this._Directory.setRoot($parameter)
@@ -67,7 +69,6 @@ Class TcGit extends Accessors
 	 */
 	init()
 	{
-		this._setUsername()
 		this._savePrefix()		
 
 		$origin	:= this._Repository.getOrigin()
@@ -78,9 +79,13 @@ Class TcGit extends Accessors
 					.run()
 		
 		if( RegExMatch( $result, "^Initialized empty Git repository" ) )
-			this.MsgBox().message($result, 10)
+			if( this.MsgBox().confirm("PULL DATA", $result "`n`n       Do You want PULL data ?", 10) )
+				this.cmd("pull").run()
+			
 		else
 			this.MsgBox().exit( "Error occurred`n" $result)
+			
+		
 			
 		return this
 	}

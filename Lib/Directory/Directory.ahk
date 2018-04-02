@@ -80,6 +80,8 @@ Class Directory extends Parent
 		this.ReadMe().create()
 		this.GitIgnore().create()
 	}
+	
+	
 	/**
 	 */
 	hasGitFolder($dir)
