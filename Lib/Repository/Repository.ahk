@@ -37,6 +37,10 @@ Class Repository extends Parent
 			this._url := this._findUrl()
 		
 		this.name( this._url )
+		
+		if( ! RegExMatch( this._url, "\.git$") )
+			this._url := this._url ".git"
+		
 		return this
 	}
 	/** get url inside tree E.G.: https://github.com/vilbur/Repository/tree/master/subfolder
@@ -83,8 +87,11 @@ Class Repository extends Parent
 			$url := this.MsgBox().input("Git repository", "Set url to repository", {default:$url} )
 			this._exitIfCanceled( $url )		
 		}
-		return %$url%		
-	
+		;return %$url%		
+		$url :=  RegExReplace( $url, "\s+$", "")
+		
+		;return % RegExMatch( $url, "\.git$") ? $url : $url ".git"
+		return $url 
 	}
 	/**
 	 */
@@ -113,7 +120,7 @@ Class Repository extends Parent
 	 */
 	exists( $url )
 	{
-		return % this._getUrlStatus( $url ) == 200
+		return % this._getUrlStatus( RegExReplace( $url, "\.git$", "") ) == 200
 	}
 	/*
 	 */

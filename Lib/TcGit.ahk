@@ -79,13 +79,11 @@ Class TcGit extends Accessors
 					.run()
 		
 		if( RegExMatch( $result, "^Initialized empty Git repository" ) )
+		{
 			if( this.MsgBox().confirm("PULL DATA", $result "`n`n       Do You want PULL data ?", 10) )
 				this.cmd("pull").run()
-			
-		else
+		} else
 			this.MsgBox().exit( "Error occurred`n" $result)
-			
-		
 			
 		return this
 	}

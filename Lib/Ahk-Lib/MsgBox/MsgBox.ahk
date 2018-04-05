@@ -1,7 +1,16 @@
 ﻿
 global $MsgBoxActiveWindowID
+global $setAlwaysOnTop
 
-/** Class MsgBox
+/** MsgBox
+	
+	@method message( $params* )	show MsgBox
+	@method confirm( $params* )	show confirm box
+	@method input( $params* )	show input box
+	@method exit( $params* )	show MsgBox then exitScript
+	
+	@method alwaysOnTop( Toggle:=true )	set msg box always on top, return this
+
 */
 Class MsgBox
 {
@@ -15,6 +24,10 @@ Class MsgBox
 	_options	:= {}	
 	_defaults	:= { "x":"", "y":"", "w":"", "h":128, "default":"" }		
 
+	__New()
+	{
+		$setAlwaysOnTop := true	
+	}
 	/** Show message box centered to window
 		@params
 			$title
@@ -25,16 +38,16 @@ Class MsgBox
 	{
 		this._setParams($params)
 		this._centerToWindow()
-		
+
 		MsgBox,262144, % this._title , % this._message, % this._timeout
 		
 		return this
 	}
 	/** Show confirm box centered to window
-			$title
-			$message
-			$button			
-			$timeout 
+			@param string	$title	
+			@param string	$message	
+			@param string	$button	'yes|no'
+			@param integer	$timeout 	
 	 */
 	confirm( $params* )
 	{
@@ -43,17 +56,18 @@ Class MsgBox
 
 		if(RegExMatch( this._button, "i)yes" ))
 			MsgBox, 4, % this._title , % this._message, % this._timeout
-		else	
-			MsgBox,260, % this._title , % this._message, % this._timeout
 		
+		else
+			MsgBox,260, % this._title , % this._message, % this._timeout
+	
 		IfMsgBox, Yes
 			return true		 
 	}
 	/** Show input box
-		$title
-		$message
-		$options ; { "x":int, "y":int, "w":int, "h"int:, "default":string, "font":string }			
-		$timeout
+			@param string	$title
+			@param string	$message
+			@param object	$options ; { "x":int, "y":int, "w":int, "h"int:, "default":string, "font":string }
+			@param integer	$timeout
 		
 		@return string value || false if canceled
 	 */
@@ -63,6 +77,7 @@ Class MsgBox
 		this._centerToWindow()
 		
 		InputBox, $value, % this._title, % this._message,, % this._options.w, % this._options.h, % this._options.x, % this._options.y,, % this._timeout, % this._options.default
+		
 		
 		if ErrorLevel
 			return false
@@ -81,6 +96,17 @@ Class MsgBox
 		this.message($params*)
 		ExitApp
 	}
+	/**
+	 */
+	alwaysOnTop($toggle:=true)
+	{
+		$setAlwaysOnTop := $toggle
+		return this
+	}
+	
+	
+	
+	
 	/** 
 	 */
 	_setParams( $params )
@@ -203,8 +229,24 @@ centerMsgToWinow($wParam)
         Process, Exist
         DetectHiddenWindows, On
         if WinExist("ahk_class #32770 ahk_pid " . ErrorLevel) {
+			
 			WinGetPos,,, $mW, $mH, A
 			WinMove, ($W-$mW)/2 + $X, ($H-$mH)/2 + $Y -128
+			
+			if( $setAlwaysOnTop )
+				WinSet, AlwaysOnTop, On, A
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
