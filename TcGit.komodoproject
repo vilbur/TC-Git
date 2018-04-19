@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Komodo Project File - DO NOT EDIT -->
 <project id="ec006988-0b19-4083-bc2e-e435f2f0e780" kpf_version="5" name="TcGit.komodoproject">
-<livefolder id="423f2b0c-be60-415f-bbdb-72b5250edd0a" idref="ec006988-0b19-4083-bc2e-e435f2f0e780" name="Lib" url="Lib/">
+<livefolder id="949ba4e7-9bcb-4e04-a11b-f82384848c10" idref="ec006988-0b19-4083-bc2e-e435f2f0e780" name="Directory" url="Lib/Directory/">
+</livefolder>
+<livefolder id="972512d0-2d15-4f87-8dfc-47537e2c75be" idref="ec006988-0b19-4083-bc2e-e435f2f0e780" name="ReadMe" url="Lib/ReadMe/">
+</livefolder>
+<livefolder id="c6650167-cd45-4b34-95d5-e92a9a444fc1" idref="ec006988-0b19-4083-bc2e-e435f2f0e780" name="Repository" url="Lib/Repository/">
+</livefolder>
+<livefolder id="d743c938-c061-454a-9718-537949ee5fd6" idref="ec006988-0b19-4083-bc2e-e435f2f0e780" name="File" url="Lib/File/">
 </livefolder>
 <preference-set idref="ec006988-0b19-4083-bc2e-e435f2f0e780" id="project" preftype="project">
   <long id="prefs_version">1</long>

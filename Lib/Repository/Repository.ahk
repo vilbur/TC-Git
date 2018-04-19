@@ -20,7 +20,9 @@ Class Repository extends Parent
 	 */
 	getOrigin()
 	{
-		return % RegExReplace( this.Parent()._runCmd( " &&git config --get remote.origin.url" ), "\s+$", "" ) 		
+		$origin := this.Parent()._runCmd( " &&git config --get remote.origin.url" )		
+		
+		return % RegExReplace( $origin, "\s+$", "" ) 		
 	}	
 	/** set url to repository
 		try to find repository, if $repository_url not defined or url not exist
