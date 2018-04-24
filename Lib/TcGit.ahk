@@ -104,25 +104,33 @@ Class TcGit extends Accessors
 	/** open GitKraken
 	  * close other instances on ctrl key pressed
 	  *
-	  * @param boolean $control_key
+	  * TODO:KRAKEN SHOUL HAS OWN CLASS
+	  * @param boolean $close_others
 	 */
-	openKraken( $control_key )
+	openKraken( $close_others )
 	{
-		if( $control_key )
-			Run, taskkill /im gitkraken.exe /f,,hide
-
+		GroupAdd, $kraken_windows, ahk_exe gitkraken.exe
+		
+		if( $close_others )
+			GroupClose, $kraken_windows, A
+	
 		
 		$kraken_highest_version := ""
 		loop, %AppData%\..\Local\gitkraken\*.*, 2, 0
 			if( RegExMatch( A_LoopFileName  , "i)app-.*" ) )
 				$kraken_highest_version := A_LoopFileName
-			 
+		
 		if( $kraken_highest_version ){
 			$path = %AppData%\..\Local\gitkraken\%$kraken_highest_version%\gitkraken.exe
 			Run,  % $path " -p """ this.Directory().path() """"
 		}
-			
+		
+		sleep, 10000 ; DIRTY HOTFIX : should wait then GitKraken windows is realy opened
+		WinSetTitle, GitKraken,, % this.Repository().name()
 	}
+	
+	
+	
 	;;;;/** Add or set remote url if exists
 	;;; * CURRENTLY UNUSED
 	;;; * 

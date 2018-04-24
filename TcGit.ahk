@@ -38,3 +38,4 @@ else if( $command == "command-line" ){
 else if( $command == "kraken" )
 	$TcGit.openKraken( GetKeyState("control", "P") )
 
+ExitApp
