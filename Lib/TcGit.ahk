@@ -125,8 +125,8 @@ Class TcGit extends Accessors
 			Run,  % $path " -p """ this.Directory().path() """"
 		}
 		
-		sleep, 10000 ; DIRTY HOTFIX : should wait then GitKraken windows is realy opened
-		WinSetTitle, GitKraken,, % this.Repository().name()
+		sleep, 12000 ; DIRTY HOTFIX : should wait then GitKraken windows is realy opened
+		WinSetTitle, GitKraken,, % this.Directory().name()
 	}
 	
 	
