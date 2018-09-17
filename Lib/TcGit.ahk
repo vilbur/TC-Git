@@ -126,7 +126,7 @@ Class TcGit extends Accessors
 		}
 		
 		sleep, 12000 ; DIRTY HOTFIX : should wait then GitKraken windows is realy opened
-		WinSetTitle, GitKraken,, % this.Directory().name()
+		WinSetTitle, GitKraken,, % this.Directory().name() " - " this.Directory().path()
 	}
 	
 	
